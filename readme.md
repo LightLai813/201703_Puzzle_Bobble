@@ -1,13 +1,14 @@
 Git & React exercises - 泡泡龍實作
 ===========================
 # Git
-- git clone -b "branch name" url "foldname"
-- git add -A or git add filename
+- git clone -b [branch-name] url [fold-name]
+- git add [-A/[file-name]]
 - git commit -m "msg"
-- git push -u origin "branch name"
+- git push [remote-name] [branch-name]
 
 # webpack
 
 # npm
+- npm init [-y]
 
 # react
