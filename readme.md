@@ -4,16 +4,17 @@ Git & React exercises - 泡泡龍實作
 - npm init [-y]
 
 ### webpack
-- **webpack-dev-server**    建立測試 server，提供瀏覽器因應檔案變動，自動刷新頁面功能    
+- **webpack-dev-server** 建立測試 server，提供瀏覽器因應檔案變動，自動刷新頁面功能
+
 |指令|說明|
 |---|---|
 |webpack-dev-server|會在 localhost:8080 建立起專案的 server|
-|--content-based [foldername]|指向專案最終輸出的資料夾|
-|--inline|自動刷新頁面，如果不加這段的話，可以改用  localhost:8080/webpack-dev-server/index.html 去瀏覽頁面，此方法是使用 iframe 方式去 reload 頁面|
-|--hot|新增/更新 modules，自動刷新頁面|
-|--devtool eval|會顯示出發生錯誤的行數與檔案名稱|
-|--progress|會顯示出打包的過程|
-|--colors|會幫 webpack 顯示的訊息加入顏色|
+| --content-based [foldername]|指向專案最終輸出的資料夾|
+| --inline|自動刷新頁面，如果不加這段的話，可以改用  localhost:8080/webpack-dev-server/index.html 去瀏覽頁面，此方法是使用 iframe 方式去 reload 頁面|
+| --hot|新增/更新 modules，自動刷新頁面|
+| --devtool eval|會顯示出發生錯誤的行數與檔案名稱|
+| --progress|會顯示出打包的過程|
+| --colors|會幫 webpack 顯示的訊息加入顏色|
     
 ### babel
 |套件|說明|
