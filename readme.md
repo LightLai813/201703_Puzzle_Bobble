@@ -4,7 +4,7 @@ Git & React exercises - 泡泡龍實作
 - npm init [-y]
 
 ### webpack
-- **webpack-dev-server** <font color="#AAA">建立測試 server，提供瀏覽器因應檔案變動，自動刷新頁面功能</font>
+- **webpack-dev-server**    建立測試 server，提供瀏覽器因應檔案變動，自動刷新頁面功能    
     |指令|說明|
     |---|---|
     |webpack-dev-server|會在 localhost:8080 建立起專案的 server|
