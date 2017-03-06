@@ -32,9 +32,12 @@ module.exports = {
         // loaders:     entry 及 require 到的檔都會依此轉換成 JS，anything to JS
         loaders: [{
             test: /\.less$/,
-            exclude: /node_modules/,
             include: /css/,
             loader: 'style-loader!css-loader!less-loader'
+        },{ 
+            test: /\.svg$/, 
+            include: /images/,
+            loader: 'svg-url-loader' 
         },{
             // test:指定目標檔案的檔名
             // loader:指定使用的 loader

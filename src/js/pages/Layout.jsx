@@ -2,6 +2,19 @@ import React from "react";
 import { Link } from "react-router";
 
 export default class Layout extends React.Component {
+    componentDidMount(){
+        const bodyW =  document.body.clientWidth,
+              bodyH = document.body.clientHeight - 90,
+              mainW = document.getElementById('main').clientWidth,
+              mainH = document.getElementById('main').clientHeight;
+
+        if(bodyW/bodyH > 580/860){
+            document.getElementById('main').style.zoom = bodyH/mainH;
+        }else{
+            document.getElementById('main').style.zoom = bodyW/mainW;
+        }
+    }
+
     render() {
         return (
             <div>

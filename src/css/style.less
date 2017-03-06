@@ -1,11 +1,9 @@
-@color-A:#DCE2E8;
+@color-A:#2b3137;
 @color-B:#CED9E1;
-@color-C:#B0BCC6;
-@color-D:#9A1619;
-@color-E:#C03639;
+@color-C:#7a868f;
+@color-D:#B0BCC6;
+@color-E:#DCE2E8;
 @color-F:#D1E1ED;
-
-
 
 
 html,
@@ -14,6 +12,7 @@ body{
     width: 100%; 
     height: 100%; 
     background: @color-E;
+    font-family: 'Codystar', cursive;
 }
 
 #app{
@@ -34,7 +33,7 @@ body{
     width: 100%;
     height: auto; 
     min-height: 100%; 
-    font-family: Helvetica, Arial, sans-serif;
+    
 
     header {
         z-index: 99999;
@@ -44,30 +43,103 @@ body{
         background: @color-D; 
         color: @color-E;
         text-align: center; 
-        font-size: 2em; 
+        font-size: 1.5em; 
         line-height: 50px; 
-        box-shadow: 0 5px 20px rgba(0,0,0,.4);
+        // box-shadow: 0 5px 20px rgba(0,0,0,.4);
     }
 
-    .main{
+    #main{
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
         position: relative;
         margin:0 auto;
-        width: 640px;
-        height: auto;
-        min-height: 100%;
-        border-right: 1px dashed @color-A; 
-        border-left: 1px dashed @color-A; 
+        width: 580px;
+        height: 860px;
+        border: 1px dashed @color-D; 
+        overflow: hidden;
+
+        .BTN_Start{
+            position: absolute;
+            display: block;
+            width: 200px;
+            height: 50px;
+            line-height: 50px;
+            top: 50%;
+            left: 50%;
+            margin: -25px -100px;
+            text-align: center;
+            background: @color-C;
+            color: @color-D;
+            text-decoration: none;
+            font-size: 26px;
+
+            &:hover{
+                background: @color-E;
+                color: @color-E;
+            }
+        }
+
+        #dragArea{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 255, 255, 0);
+            z-index: 99999;
+        }
+
+        #dragon{
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            top: 500px;
+            left: 180px;
+            background: url('../images/dragon.svg');
+            background-size:  100% 100%;
+        }
+
+        .bubble{
+            position: absolute;
+            width: 56px;
+            height: 56px;
+            margin-top: -28px;
+            margin-left: -28px;
+
+            &.y {
+                background: url(../images/smile_y.svg);
+                background-size:  100% 100%;
+
+            }
+
+            &.r {
+                background: url(../images/smile_r.svg);
+                background-size:  100% 100%;
+            }
+
+            &.g {
+                background: url(../images/smile_g.svg);
+                background-size:  100% 100%;
+            }
+
+            &.b {
+                background: url(../images/smile_b.svg);
+                background-size:  100% 100%;
+            }
+
+        }
     }
 }
 
 footer{
     position: relative; 
     width: 100%; 
-    height: 33px; 
-    line-height:33px; 
-    margin-top: -33px; 
+    height: 40px; 
+    line-height:40px; 
+    margin-top: -40px; 
     text-align: center; 
-    background: @color-D; 
+    background: @color-C; 
     color: @color-B; 
     font-size: 0.5em; 
 }
