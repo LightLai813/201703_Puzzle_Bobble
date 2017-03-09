@@ -38,3 +38,14 @@ Git & React exercises - 泡泡龍實作
 |git merge [remotename]/[branchname]||
 
 ### react
+|套件|說明|
+|---|---|
+|react-dom| |
+|react-router| |
+|react-hammerjs| |
+|react-redux| |
+|redux| |
+|redux-logger|顯示 Redux action 和 store 動作記錄|
+|redux-thunk| |
+|redux-promise-middleware| |
+

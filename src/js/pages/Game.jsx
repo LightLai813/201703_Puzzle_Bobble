@@ -6,8 +6,6 @@ import Bubble from '../components/Bubble.jsx';
 import Dragon from '../components/Dragon.jsx';
 
 export default class Game extends React.Component{
-
-
     render(){
         return(
             <div id="main">

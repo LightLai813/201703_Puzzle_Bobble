@@ -19,15 +19,18 @@ module.exports = {
         filename: 'client.min.js',
         publicPath: '/'
     },
-    // resolve: {
-    //     // root:        require 的根目錄 (模組的引用不受影響)
-    //     // extensions:  require 可省略的副檔名
-    //     // ailas:       屬性對應的值會形成 ailas 對應。ailas: { a:'b' } => require('a') 同於 require('b')
-    //     // path.resolve 可以傳入任意數量的字串，會將他們以類似 cd 的方式一一執行，並回傳最後的絕對路徑
-    //     root: [path.resolve(__dirname, 'src')],
-    //     extensions: ['', '.js', '.jsx', 'css', '.scss'],
-    //     ailas: { a: 'b' }
-    // },
+    resolve: {
+        // root:        require 的根目錄 (模組的引用不受影響)
+        // extensions:  require 可省略的副檔名
+        // ailas:       屬性對應的值會形成 ailas 對應。ailas: { a:'b' } => require('a') 同於 require('b')
+        // path.resolve 可以傳入任意數量的字串，會將他們以類似 cd 的方式一一執行，並回傳最後的絕對路徑
+        // root: [path.resolve(__dirname, 'src')],
+        extensions: ['.js', '.jsx','.less'],
+        modules: [
+            path.resolve('./js/reducers'),
+            path.resolve('./node_modules')
+        ]
+    },
     module: {
         // loaders:     entry 及 require 到的檔都會依此轉換成 JS，anything to JS
         loaders: [{

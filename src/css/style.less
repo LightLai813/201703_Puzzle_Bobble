@@ -12,7 +12,7 @@ body{
     width: 100%; 
     height: 100%; 
     background: @color-E;
-    font-family: 'Codystar', cursive;
+    font-family: 'Codystar', '微軟正黑體';
 }
 
 #app{
@@ -33,7 +33,6 @@ body{
     width: 100%;
     height: auto; 
     min-height: 100%; 
-    
 
     header {
         z-index: 99999;
@@ -62,21 +61,22 @@ body{
         .BTN_Start{
             position: absolute;
             display: block;
-            width: 200px;
-            height: 50px;
-            line-height: 50px;
+            width: 260px;
+            height: 70px;
+            line-height: 70px;
             top: 50%;
             left: 50%;
-            margin: -25px -100px;
+            margin: -35px -130px;
             text-align: center;
             background: @color-C;
             color: @color-D;
             text-decoration: none;
-            font-size: 26px;
+            font-size: 45px;
+            cursor: pointer;
 
             &:hover{
-                background: @color-E;
-                color: @color-E;
+                background: @color-A;
+                color: @color-C;
             }
         }
 
@@ -92,10 +92,10 @@ body{
 
         #dragon{
             position: absolute;
-            width: 150px;
-            height: 150px;
-            top: 500px;
-            left: 180px;
+            width: 110px;
+            height: 110px;
+            top: 556px;
+            left: 197px;
             background: url('../images/dragon.svg');
             background-size:  100% 100%;
         }
@@ -110,7 +110,6 @@ body{
             &.y {
                 background: url(../images/smile_y.svg);
                 background-size:  100% 100%;
-
             }
 
             &.r {
@@ -128,6 +127,25 @@ body{
                 background-size:  100% 100%;
             }
 
+            &.n {
+                box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                -webkit-box-sizing: border-box;
+                border: 1px dashed rgba(0, 0, 0, .1);
+            }
+
+        }
+
+        .bigMSG{
+            position: absolute;
+            top: 0;
+            left: 0;
+            text-align: center;
+            font-size: 72px;
+            font-weight: 500;
+            width: 580px;
+            height: 860px;
+            line-height: 860px;
         }
     }
 }

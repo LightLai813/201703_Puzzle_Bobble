@@ -1,29 +1,43 @@
 import React from 'react';
 
-export default class Bubble extends React.Component{
-    constructor(){
-        super();
+import { connect } from 'react-redux';
+import { getDefaultBubbles, doneSetBubbles } from '../actions/bubbleActions';
+
+class Bubble extends React.Component{
+    constructor(props){
+        super(props);
         this.state = {
-            bubble: [
-                {row: 1, col: 1, color: 'y'},
-                {row: 1, col: 2, color: 'y'},
-                {row: 1, col: 3, color: 'b'},
-                {row: 1, col: 4, color: 'b'},
-                {row: 2, col: 3, color: 'r'},
-                {row: 3, col: 1, color: 'r'},
-                {row: 3, col: 2, color: 'y'},
-                {row: 3, col: 3, color: 'b'},
-                {row: 4, col: 4, color: 'y'},
-                {row: 4, col: 3, color: 'g'},
-                {row: 4, col: 4, color: 'g'}
-            ]
+            bubble: []
         }
     }
 
-     eachBubble(obj, i){
+    componentWillMount() {
+        this.props.getDefaultBubbles();
+    }
+
+    // 接收到上層 props 有更動 
+    componentWillReceiveProps(nextProps){
+        if(nextProps.needUpdateBubbles){
+            let showBubbles = [];
+            const bubbles = nextProps.bubbles;
+           
+            for(var i=0; i<bubbles.length;i++){
+                for(var j=0; j<bubbles[i].length;j++){
+                    showBubbles.push({row: i, col:  j, color: bubbles[i][j]});
+                }
+            }
+
+            this.setState({
+                bubble: showBubbles,
+            });
+            return true;
+        }
+    }
+
+    eachBubble(obj, i){
         const styleOption ={
-            left: (obj.col*10+((obj.row%2)*5)) + '%',
-            top: (obj.row*47-20) + 'px'
+            left: ((obj.col+1)*58+(((obj.row+1)%2)*-29)) + 'px',
+            top: ((obj.row+1)*47-20) + 'px'
         }
 
         return (
@@ -39,3 +53,19 @@ export default class Bubble extends React.Component{
         )
     }
 }
+
+
+const mapStateToProps = (state) => ({
+    bubbles: state.bubbleReducer.bubbles,
+    needUpdateBubbles: state.bubbleReducer.needUpdateBubbles
+})
+
+const mapDispatchToProps = {
+    getDefaultBubbles: getDefaultBubbles,
+    doneSetBubbles: doneSetBubbles
+}
+
+export default connect(  
+    mapStateToProps,
+    mapDispatchToProps
+)(Bubble)

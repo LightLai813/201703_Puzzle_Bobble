@@ -1,18 +1,25 @@
 import React from "react";
 import { Link } from "react-router";
 
-export default class Layout extends React.Component {
+import { connect } from 'react-redux';
+import { setViewZoom } from '../actions/envActions';
+
+class Layout extends React.Component {
     componentDidMount(){
         const bodyW =  document.body.clientWidth,
               bodyH = document.body.clientHeight - 90,
               mainW = document.getElementById('main').clientWidth,
               mainH = document.getElementById('main').clientHeight;
+        let zoomN = 1;
 
         if(bodyW/bodyH > 580/860){
-            document.getElementById('main').style.zoom = bodyH/mainH;
+            zoomN = bodyH/mainH;
         }else{
-            document.getElementById('main').style.zoom = bodyW/mainW;
+            zoomN = bodyW/mainW;
         }
+
+        document.getElementById('main').style.zoom = zoomN;
+        this.props.setViewZoom(zoomN);
     }
 
     render() {
@@ -27,6 +34,19 @@ export default class Layout extends React.Component {
         )
     }
 }
+
+
+const mapStateToProps = (state) => ({
+})
+
+const mapDispatchToProps = {
+    setViewZoom: setViewZoom
+}
+
+export default connect(  
+    mapStateToProps,
+    mapDispatchToProps
+)(Layout)
 
 class Header extends React.Component {
     render() {
