@@ -1,4 +1,3 @@
-
 let getDefaultBubbles = ()=>{
     let bubbles = [];
     var colorArr = ['r','g','b','y'];
@@ -29,7 +28,8 @@ let getShotBubble = ()=>{
         angle: 0,
         strong: 0,
         color: randomColor(['r','g','b','y']),
-        isSet: false
+        isSet: false,
+        isFly: false
     };
 }
 
@@ -38,9 +38,40 @@ let randomColor = (colorArray) =>{
     return colorArray[rndInt(0, colorArray.length-1)];;
 }
 
-let shotBubble = (bubbles, color, angle, strong) => {
-    console.log(angle);
-    return bubbles
+let shotBubble = (bubbles, shotBubble, angle, strong) => {
+    // 算出球軌跡
+    // x: 290
+    // y: 638
+    var newShotBubble = shotBubble;
+    newShotBubble.angle = angle;
+    newShotBubble.strong = strong;
+    newShotBubble.isFly = true;
+
+    // 判斷該格是否已有珠
+    function checkIsEmpty(pos){
+        // row 確認
+        let row, col;
+        row = Math.round((pos.y-27)/47)-1;
+        if(row < 0){
+            row = 0;
+        } 
+
+        // col 確認
+        if(row%2==0){
+            col = Math.floor(pos.x/58);
+        }else{
+            col = Math.floor((pos.x-29)/58);
+        }
+
+        if(col<0){
+            col = 0;
+        }else if(col>8){
+            col = 8;
+        }
+
+
+    }
+    return shotBubble;
 }
 
 export default function reducer(state = {}, action) {
@@ -76,7 +107,7 @@ export default function reducer(state = {}, action) {
         case 'SHOT_BUBBLE':
             return {
                 ...state,
-                bubbles: shotBubble(state.bubbles, action.color, action.angle, action.strong)
+                shotBubble: shotBubble(state.bubbles, state.shotBubble, action.angle, action.strong)
             };
 
         default:

@@ -15,9 +15,8 @@ export const doneSetShotBubble = () =>({
     type: 'DONE_SET_SHOTBUBBLE'
 })
 
-export const shotBubble = (color, angle, strong) => ({
+export const shotBubble = (angle, strong) => ({
     type: 'SHOT_BUBBLE',
-    color: color,
     angle: angle,
     strong: strong
 })

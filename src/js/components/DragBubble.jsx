@@ -90,7 +90,7 @@ export class DragBubble extends React.Component{
                      const getStrong = (p1, p2) => {
                         return Math.sqrt(Math.pow((p1.x-p2.x),2) + Math.pow((p1.y-p2.y),2));
                     }
-                    this.props.shotBubble(this.state.bubbleColor, angle, getStrong(this.state.bubblePos, this.state.center));
+                    this.props.shotBubble(angle, getStrong(this.state.bubblePos, this.state.center));
                     msg = 'NICE SHOT';
                 }
 
