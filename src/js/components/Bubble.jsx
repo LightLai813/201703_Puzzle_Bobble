@@ -30,6 +30,9 @@ class Bubble extends React.Component{
             this.setState({
                 bubble: showBubbles,
             });
+
+
+            this.props.doneSetBubbles();
             return true;
         }
     }

@@ -6,17 +6,15 @@ export const doneSetBubbles = () => ({
     type: 'DONE_SET_BUBBLES'
 })
 
-
-export const getShotBubble = () =>({
-    type: 'GET_SHOT_BUBBLE'
+export const getBullet = () =>({
+    type: 'GET_BULLET'
 })
 
-export const doneSetShotBubble = () =>({
-    type: 'DONE_SET_SHOTBUBBLE'
+export const doneSetBullet = () =>({
+    type: 'DONE_SET_BULLET'
 })
 
-export const shotBubble = (angle, strong) => ({
-    type: 'SHOT_BUBBLE',
-    angle: angle,
-    strong: strong
+export const shotBullet = (coordinate) =>({
+    type: 'SHOT_BULLET',
+    coordinate: coordinate
 })
