@@ -4,7 +4,7 @@ import Hammer from 'react-hammerjs';
 import { connect } from 'react-redux';
 import { shotBullet, getBullet, doneSetBullet } from '../actions/bubbleActions';
 
-export class DragBubble extends React.Component{
+export class Bullet extends React.Component{
     constructor(props){
         super(props);
         this.state = {
@@ -63,7 +63,7 @@ export class DragBubble extends React.Component{
         if(!nextState.isDrag && nextState.bullet.isFly ){
             setTimeout(function(){
                 this.moveBullet(false);
-            }.bind(this), 33);
+            }.bind(this), 16);
         }
     }
 
@@ -120,7 +120,7 @@ export class DragBubble extends React.Component{
         }
 
         let rad = newBullet.angle*Math.PI/180;
-        for(var i=0; i<3;i++){
+        for(var i=0; i<1;i++){
             newBullet.x += Math.sin(rad)*moveUnit;
             if(newBullet.x > 580){
                 newBullet.x = 580*2-newBullet.x;
@@ -135,7 +135,7 @@ export class DragBubble extends React.Component{
             newBullet.y -= Math.cos(rad)*moveUnit;
             
             let bulletCoordinate = getCoordinate(newBullet);
-            if(haveNeighbor(this.props.bubbles, bulletCoordinate)){
+            if(haveNeighbor(this.props.bubbles, bulletCoordinate, newBullet.angle)){
                 this.props.shotBullet(bulletCoordinate);
                 this.setState({
                     bullet:{
@@ -177,7 +177,7 @@ export class DragBubble extends React.Component{
         }
 
         // 確認是否有鄰居
-        function haveNeighbor(bubbles,pos){
+        function haveNeighbor(bubbles, pos, angle){
             var checkItems = [];
 
             if(pos.row == 0){
@@ -185,30 +185,41 @@ export class DragBubble extends React.Component{
             } else if(pos.row%2 == 0){
                 if(pos.col > 0){
                     checkItems.push({row: (pos.row-1), col: pos.col-1});
-                    checkItems.push({row: pos.row, col: (pos.col-1)});
+                    if(angle<-30){
+                        checkItems.push({row: pos.row, col: (pos.col-1)});
+                    }
                 } 
                 
                 if(pos.col < 9){
                     checkItems.push({row: (pos.row-1), col: (pos.col)});
-                    checkItems.push({row: pos.row, col: (pos.col+1)});
+                    if(angle>30){
+                        checkItems.push({row: pos.row, col: (pos.col+1)});
+                    }
                 }
             } else {
                 checkItems.push({row: (pos.row-1), col: pos.col});
                 checkItems.push({row: (pos.row-1), col: (pos.col+1)});
 
-                if(pos.col > 0){
+                if(pos.col > 0 && angle<-30){
                     checkItems.push({row: pos.row, col: (pos.col-1)});
                 } 
                 
-                if(pos.col < 8){
-                checkItems.push({row: pos.row, col: (pos.col+1)});
+                if(pos.col < 8 && angle>30){
+                    checkItems.push({row: pos.row, col: (pos.col+1)});
                 }
             }
 
-            for(var i=0, checkItem; checkItem = checkItems[i];i++){
-                if(bubbles[checkItem.row][checkItem.col] != 'n'){
+            for(var i=0, checkItem; checkItem = checkItems[i];i++){ 
+                // && (distOf2P({x: ((checkItem.col+1)*58+(((checkItem.row+1)%2)*-29)), y: ((checkItem.row+1)*47-20)},newBullet) <= 58 )
+                if(bubbles[checkItem.row][checkItem.col].color != 'n'){
                     return true;
                 }
+            }
+
+            function distOf2P(p1, p2){
+                var x = p1.x - p2.x;
+                var y = p1.y - p2.y;
+                return Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2));
             }
 
             return false;
@@ -327,4 +338,4 @@ const mapDispatchToProps = {
 export default connect(  
     mapStateToProps,
     mapDispatchToProps
-)(DragBubble)
+)(Bullet)

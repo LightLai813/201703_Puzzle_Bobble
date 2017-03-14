@@ -6,6 +6,10 @@ export const doneSetBubbles = () => ({
     type: 'DONE_SET_BUBBLES'
 })
 
+export const clearUnliveBubbles = () => ({
+    type: 'CLEAR_UNLIVE_BUBBLES'
+})
+
 export const getBullet = () =>({
     type: 'GET_BULLET'
 })
@@ -18,3 +22,5 @@ export const shotBullet = (coordinate) =>({
     type: 'SHOT_BULLET',
     coordinate: coordinate
 })
+
+
