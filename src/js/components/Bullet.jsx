@@ -20,8 +20,7 @@ export class Bullet extends React.Component{
                 y: 732
             },
             isDrag: false,
-            zoom: 1,
-            shotMsg: ''
+            zoom: 1
         };
     }
 
@@ -68,6 +67,9 @@ export class Bullet extends React.Component{
     }
 
     handlePan(e){
+        if(this.props.gameOver){
+            return false;
+        }
         e.preventDefault();
 
         var angle = this.getAngel({ x: 0, y:0},{x: e.deltaX, y:e.deltaY})-180;
@@ -210,18 +212,10 @@ export class Bullet extends React.Component{
             }
 
             for(var i=0, checkItem; checkItem = checkItems[i];i++){ 
-                // && (distOf2P({x: ((checkItem.col+1)*58+(((checkItem.row+1)%2)*-29)), y: ((checkItem.row+1)*47-20)},newBullet) <= 58 )
                 if(bubbles[checkItem.row][checkItem.col].color != 'n'){
                     return true;
                 }
             }
-
-            function distOf2P(p1, p2){
-                var x = p1.x - p2.x;
-                var y = p1.y - p2.y;
-                return Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2));
-            }
-
             return false;
         }
     }
@@ -309,8 +303,6 @@ export class Bullet extends React.Component{
                 
                 <div id="bragBubble" className={'bubble ' + this.state.bullet.color} style={{left:this.state.bullet.x+'px',top:this.state.bullet.y+'px'}} ></div>
 
-                <div className="bigMSG">{this.state.shotMsg}</div>
-
                 <Hammer
                     onPanStart={this.handlePan.bind(this)} 
                     onPan={this.handlePan.bind(this)} 
@@ -326,7 +318,8 @@ export class Bullet extends React.Component{
 const mapStateToProps = (state) => ({
     bullet: state.bubbleReducer.bullet,
     bubbles: state.bubbleReducer.bubbles,
-    zoom: state.envReducer.zoom
+    zoom: state.envReducer.zoom,
+    gameOver: state.bubbleReducer.gameOver
 })
 
 const mapDispatchToProps = {

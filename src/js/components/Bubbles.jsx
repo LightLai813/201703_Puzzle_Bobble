@@ -8,7 +8,9 @@ class Bubbles extends React.Component{
         super(props);
         this.state = {
             bubble: [],
-            disapperAni: false
+            disapperAni: false,
+            moveArea: false,
+            shotMsg: ''
         }
     }
 
@@ -22,23 +24,36 @@ class Bubbles extends React.Component{
             let disapperAni = false;
             let showBubbles = [];
             const bubbles = nextProps.bubbles;
-           
+
             for(var i=0, bubbleRow; bubbleRow=bubbles[i]; i++){
                 for(var j=0, item; item=bubbleRow[j]; j++){
                     var style=item.color;
                     if(item.state == 'clear'){
                         disapperAni = true;
-                        style += ' disapper';
+                        style += ' clear';
+                    }else if(item.state == 'float'){
+                        disapperAni = true;
+                        style += ' float';
                     }
                     showBubbles.push({row: i, col:  j, color: style});
                     
                 }
             }
 
+            let moveArea = false;
+            if(nextProps.shotCount%5==1){
+                moveArea = true;
+            }
+
+            let msg = nextProps.gameOver ? 'GAME OVER': disapperAni ? 'NICE SHOT':'';
+
             this.setState({
                 bubble: showBubbles,
-                disapperAni: disapperAni
+                disapperAni: disapperAni,
+                moveArea: moveArea,
+                shotMsg: msg
             });
+
 
 
             this.props.doneSetBubbles();
@@ -48,11 +63,33 @@ class Bubbles extends React.Component{
 
     // 更新前動作
     componentWillUpdate(nextProps, nextState){
-        if(nextState.disapperAni){
+        if(nextProps.gameOver != this.props.gameOver){
+            this.setGameOver(0);
+        }else if(nextState.disapperAni){
             setTimeout(function(){
                 this.props.clearUnliveBubbles();
             }.bind(this), 1000);
         }
+
+    }
+
+    setGameOver(index){
+        let newBubbles = this.state.bubble;
+        for(var i=0, bubble; bubble = newBubbles[i]; i++){
+            if(bubble.row ==  index && bubble.color != 'n'){
+                bubble.color = 'gray';
+            }
+        }
+        this.setState({
+            bubble: newBubbles
+        });
+
+        if(index < 14){
+            setTimeout(function(){
+                this.setGameOver(++index);
+            }.bind(this), 100);
+        }
+
     }
 
     eachBubble(obj, i){
@@ -66,19 +103,41 @@ class Bubbles extends React.Component{
         );
     }
 
+    checkIsMoveDown(){
+        if(this.state.moveArea){
+            return 'movedown';
+        }else{
+            return '';
+        }
+    }
+
+    bigMsg(){
+        if( this.state.shotMsg != ''){
+            return (
+                <div className="bigMSG">{this.state.shotMsg}</div>
+            )
+        }else{
+            return false;
+        } 
+    }
+
     render(){
         return(
             <div>
-                {this.state.bubble.map(this.eachBubble.bind(this))}
+                <div id="bubbleArea" className={this.checkIsMoveDown()}>
+                    {this.state.bubble.map(this.eachBubble.bind(this))}
+                </div>
+                {this.bigMsg()}
             </div>
         )
     }
 }
 
-
 const mapStateToProps = (state) => ({
     bubbles: state.bubbleReducer.bubbles,
-    needUpdateBubbles: state.bubbleReducer.needUpdateBubbles
+    needUpdateBubbles: state.bubbleReducer.needUpdateBubbles,
+    shotCount: state.bubbleReducer.shotCount,
+    gameOver: state.bubbleReducer.gameOver
 })
 
 const mapDispatchToProps = {

@@ -16,7 +16,7 @@ let getDefaultBubbles = ()=>{
             ){
                 bubbles[i].push({color: randomColor(colorArr), state: 'live'});
             }else{
-                bubbles[i].push({color: 'n', state: 'none'});
+                bubbles[i].push({color: 'n', state: null});
             }
         }
     }
@@ -36,32 +36,78 @@ function randomColor(colorArray){
     return colorArray[rndInt(0, colorArray.length-1)];;
 }
 
-function updateBubbles(bubbles, bullet, coordinate, color){
-    let newBubbles = bubbles;
+function updateBubbles(state, coordinate){
+    let newBubbles = state.bubbles;
 
-     for(var i=0, row; row=newBubbles[i]; i++){
+    for(var i=0; i<newBubbles.length; i++){
         for(var j=0; j < newBubbles[i].length; j++){
             if(newBubbles[i][j].color != 'n'){
-                newBubbles[i][j].state = 'uncheck';
+                newBubbles[i][j].state = 'float';
             }
         }
     }
 
     // 判斷鄰居是否也是同色系
-    let clearCount = 1;
-    isNeighborSameColor(newBubbles, coordinate, color);
+    let clearItems = [];
+    isNeighborSameColor(newBubbles, coordinate, state.bullet.color);
     function isNeighborSameColor(bubbles, basic, color){
         var checkItems = getNeighbors(basic);
 
         for(var i=0, checkItem; checkItem = checkItems[i];i++){
-            if(bubbles[checkItem.row][checkItem.col].color == color && bubbles[checkItem.row][checkItem.col].state == 'uncheck'){
-                clearCount++;
-                bubbles[checkItem.row][checkItem.col].state = 'clear';
-                isNeighborSameColor(bubbles, checkItem, color);
+            if(newBubbles[checkItem.row][checkItem.col].color == color && newBubbles[checkItem.row][checkItem.col].state == 'float'){
+                clearItems.push(checkItem);
+                newBubbles[checkItem.row][checkItem.col].state = 'clear';
+                isNeighborSameColor(newBubbles, checkItem, color);
             }
         }
     }
 
+    if(clearItems.length >= 2){
+        newBubbles[coordinate.row][coordinate.col] = {color:state.bullet.color, state: 'clear'};
+    }else{
+        if(clearItems[0]){
+            newBubbles[clearItems[0].row][clearItems[0].col] = {color:state.bullet.color, state: 'waitLive'};
+        }
+        newBubbles[coordinate.row][coordinate.col] = {color:state.bullet.color, state: 'waitLive'};
+    }
+
+    // 解決浮動泡泡，把有跟第一層連接的泡泡都設為 live
+    for(var i=0; i<newBubbles[0].length; i++){
+        if(newBubbles[0][i].color == 'n' || newBubbles[0][i].state == 'clear'){
+            continue;
+        }
+        newBubbles[0][i].state = 'live';
+        setNeighborsToLive({row: 0, col: i});
+    }
+    
+    // 射五次向下降一次
+    if(state.shotCount%5 == 0){
+        newBubbles.pop();
+        newBubbles.pop();
+
+        // 第1排處理
+        var newRow0 = [], newRow1 = [];
+        for(let i=0; i<10; i++){
+            newRow0.push({color: randomColor(['r','g','b','y']), state: 'live'});
+        }
+        for(let i=0; i<9; i++){
+            newRow1.push({color: randomColor(['r','g','b','y']), state: 'live'});
+        }
+
+        newBubbles.unshift(newRow0, newRow1);
+    }
+
+    // 判斷 是否遊戲結束
+    for(var i=0, bubble; bubble=newBubbles[13][i]; i++){
+        if(bubble.state == 'live' && bubble.color != 'n'){
+            state.gameOver = true;
+        }
+    }
+
+    return newBubbles;
+
+
+    // 取得鄰居
     function getNeighbors(basic){
         var Neighbors = [];
         if(basic.row == 0){
@@ -89,8 +135,6 @@ function updateBubbles(bubbles, bullet, coordinate, color){
         } else {
             Neighbors.push({row: (basic.row-1), col: (basic.col)});
             Neighbors.push({row: (basic.row-1), col: (basic.col+1)});
-            Neighbors.push({row: (basic.row+1), col: (basic.col)});
-            Neighbors.push({row: (basic.row+1), col: (basic.col+1)});
 
             if(basic.col > 0){
                 Neighbors.push({row: (basic.row), col: (basic.col-1)});
@@ -99,62 +143,24 @@ function updateBubbles(bubbles, bullet, coordinate, color){
             if(basic.col < 8){
                 Neighbors.push({row: (basic.row), col: (basic.col+1)});
             }
+
+            Neighbors.push({row: (basic.row+1), col: (basic.col)});
+            Neighbors.push({row: (basic.row+1), col: (basic.col+1)});
         }
 
         return Neighbors;
     }
 
-    if(clearCount >= 3){
-        newBubbles[coordinate.row][coordinate.col] = {color:bullet.color, state: 'clear'};
-
-        
-        // 解決浮動泡泡
-        for(var i=0, row; row=newBubbles[i]; i++){
-            for(var j=0; j < newBubbles[i].length; j++){
-                if(i=0){
-                    if(newBubbles[i][j].state == 'uncheck'){
-                        newBubbles[i][j].state = 'live';
-                    }
-                }else if(newBubbles[i][j].state=='uncheck'){
-                    isFloat({row: i, col: j});
-                }
+    // 判斷是否浮動
+    function setNeighborsToLive(basic){
+        var Neighbors = getNeighbors(basic);
+        for(var k=0,Neighbor; Neighbor = Neighbors[k];k++){
+            if(newBubbles[Neighbor.row][Neighbor.col].state == 'float' || newBubbles[Neighbor.row][Neighbor.col].state == 'waitLive'){
+                newBubbles[Neighbor.row][Neighbor.col].state = 'live';
+                setNeighborsToLive(Neighbor);
             }
         }
-
-        function isFloat(basic){
-            var Neighbors = getNeighbors(basic);
-            var isFloat = true;
-            newBubbles[basic.row][basic.col].state = 'checkednotsure';
-
-            for(var k=0,Neighbor; Neighbor = Neighbors[k];k++){
-                if(newBubbles[Neighbor.row][Neighbor.col].state == 'checkednotsure'){
-                    continue;
-                }
-
-                if(newBubbles[Neighbor.row][Neighbor.col].state = 'live'){
-                    newBubbles[basic.row][basic.col].state = 'live';
-                    isFloat = false;
-                    break;
-                }else if(newBubbles[Neighbor.row][Neighbor.col].state = 'uncheck'){
-                    // 若是鄰居也不是很確定，先記錄忽略它，再由它去找下一個
-                    // 這邊再檢查 有bug
-                    if(!isFloat(Neighbor)){
-                        newBubbles[basic.row][basic.col].state = 'live';
-                        isFloat = false;
-                    }
-                }
-            }
-
-            if(isFloat){
-                newBubbles[basic.row][basic.col].state = 'float';
-            }
-            return isFloat;
-        }
-    }else{
-        newBubbles[coordinate.row][coordinate.col] = {color:bullet.color, state: 'live'};
     }
-
-    return newBubbles;
 }
 
 function clearUnliveBubbles(bubbles){
@@ -163,7 +169,7 @@ function clearUnliveBubbles(bubbles){
     for(var i=0, row; row=newBubbles[i]; i++){
         for(var j=0; j < newBubbles[i].length; j++){
             if(newBubbles[i][j].state == 'clear' || newBubbles[i][j].state == 'float'){
-                newBubbles[i][j] = {color: 'n', state: 'none'};
+                newBubbles[i][j] = {color: 'n', state: null};
             }
         }
     }
@@ -171,13 +177,16 @@ function clearUnliveBubbles(bubbles){
     return newBubbles;
 }
 
-export default function reducer(state = {}, action) {
+export default function reducer(state = {
+    shotCount: 1,
+    gameOver: false
+}, action) {
     switch (action.type) {
         case 'GET_DEFAULT_BUBBLES':
             return {
                 ...state,
                 needUpdateBubbles: true,
-                bubbles: getDefaultBubbles()
+                bubbles: getDefaultBubbles(),
             };
 
         case 'DONE_SET_BUBBLES':
@@ -212,8 +221,10 @@ export default function reducer(state = {}, action) {
             return {
                 ...state,
                 needUpdateBubbles: true,
-                bubbles: updateBubbles(state.bubbles, state.bullet, action.coordinate, state.bullet.color),
-                bullet: getBullet()
+                bubbles: updateBubbles(state, action.coordinate),
+                bullet: getBullet(),
+                shotCount: (++state.shotCount)
+
             };
 
         default:

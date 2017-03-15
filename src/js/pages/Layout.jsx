@@ -52,7 +52,7 @@ class Header extends React.Component {
     render() {
         return (
             <header>
-                Puzzle Bobble
+                Puzzle Bubble
             </header>
         );
     }
